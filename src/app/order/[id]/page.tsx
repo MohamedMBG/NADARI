@@ -8,6 +8,7 @@ import { Footer } from '@/components/Footer';
 import { CheckCircle, PackageSearch, Truck, Home, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { API_BASE_URL } from '@/lib/api';
 
 export default function OrderConfirmation() {
   const { id } = useParams();
@@ -18,7 +19,7 @@ export default function OrderConfirmation() {
     queryKey: ['order', id],
     queryFn: async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/orders/${id}`);
+        const res = await axios.get(`${API_BASE_URL}/orders/${id}`);
         return res.data;
       } catch (err) {
         return {

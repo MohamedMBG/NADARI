@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Shield, Truck, RefreshCw, CreditCard } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api';
 
 const checkoutSchema = z.object({
   fullName: z.string().min(3, 'Name is too short'),
@@ -56,7 +57,7 @@ export default function Checkout() {
           price: i.price,
         })),
       };
-      const res = await axios.post('http://localhost:3001/orders', payload);
+      const res = await axios.post(`${API_BASE_URL}/orders`, payload);
       return res.data;
     },
     onSuccess: (data) => {

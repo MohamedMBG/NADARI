@@ -8,6 +8,7 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Package, ShoppingCart, Calendar, Clock, Settings, LogOut, CheckCircle, XCircle } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('orders');
@@ -19,7 +20,7 @@ export default function AdminDashboard() {
   const handleLogin = async (e: any) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/auth/login`, { email, password });
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
       setToken(res.data.access_token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.access_token}`;
       toast.success('Logged in successfully');
@@ -30,19 +31,19 @@ export default function AdminDashboard() {
 
   const { data: stats } = useQuery({
     queryKey: ['admin-stats'],
-    queryFn: async () => (await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/admin/dashboard`)).data,
+    queryFn: async () => (await axios.get(`${API_BASE_URL}/admin/dashboard`)).data,
     enabled: !!token,
   });
 
   const { data: orders = [] } = useQuery({
     queryKey: ['admin-orders'],
-    queryFn: async () => (await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/orders`)).data,
+    queryFn: async () => (await axios.get(`${API_BASE_URL}/orders`)).data,
     enabled: !!token && activeTab === 'orders',
   });
 
   const updateOrderStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string, status: string }) => {
-      return axios.put(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/orders/${id}/status`, { status });
+      return axios.put(`${API_BASE_URL}/orders/${id}/status`, { status });
     },
     onSuccess: () => {
       toast.success('Order status updated');

@@ -16,6 +16,7 @@ import { Check, Shield, Truck, CreditCard, Clock, RotateCcw } from 'lucide-react
 import { WhatsAppWidget } from '@/components/WhatsAppWidget';
 import { SmartLensRecommender } from '@/components/SmartLensRecommender';
 import { motion, Variants } from 'framer-motion';
+import { API_BASE_URL } from '@/lib/api';
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -38,7 +39,7 @@ export default function ProductDetails() {
     queryKey: ['product', slug],
     queryFn: async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/products/${slug}`);
+        const res = await axios.get(`${API_BASE_URL}/products/${slug}`);
         return res.data;
       } catch (err) {
         // Fallback mockup
@@ -62,7 +63,7 @@ export default function ProductDetails() {
 
   const reserveMutation = useMutation({
     mutationFn: async (data: any) => {
-      return axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/reservations`, data);
+      return axios.post(`${API_BASE_URL}/reservations`, data);
     },
     onSuccess: () => {
       toast.success('Reservation Confirmed', {

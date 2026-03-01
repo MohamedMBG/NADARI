@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search } from 'lucide-react';
 import { motion, Variants } from 'framer-motion';
+import { API_BASE_URL } from '@/lib/api';
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -42,7 +43,8 @@ export default function Shop() {
     queryFn: async () => {
       // Mocked if API offline
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/products${category !== 'all' ? `?category=${category}` : ''}`);
+        const res = await axios.get(`${API_BASE_URL}/products${category !== 'all' ? `?category=${category}` : ''}`);
+
         return res.data;
       } catch (err) {
         // Fallback for demo

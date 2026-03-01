@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CheckCircle } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api';
 
 import { Shield, Truck, CreditCard, Clock, Eye, User, Sparkles } from 'lucide-react';
 
@@ -38,7 +39,7 @@ export default function Booking() {
         userName: data.fullName,
         userPhone: data.phone,
       };
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/bookings`, payload);
+      const res = await axios.post(`${API_BASE_URL}/bookings`, payload);
       return res.data;
     },
     onSuccess: () => {
