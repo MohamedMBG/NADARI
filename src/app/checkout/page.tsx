@@ -43,6 +43,12 @@ export default function Checkout() {
 
   const orderMutation = useMutation({
     mutationFn: async (data: any) => {
+      const t = localStorage.getItem('nadari_customer_token');
+      let userId = undefined;
+      if (t) {
+        try { userId = JSON.parse(atob(t.split('.')[1])).sub; } catch {}
+      }
+
       const payload = {
         customerName: data.fullName,
         customerPhone: data.phone,
@@ -50,6 +56,7 @@ export default function Checkout() {
         customerAddress: data.address,
         customerNotes: data.notes,
         payment: 'COD',
+        userId,
         items: items.map(i => ({
           productId: i.productId,
           variantId: i.variantId || null,

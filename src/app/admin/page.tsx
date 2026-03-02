@@ -270,11 +270,29 @@ function ProductsTab() {
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState({ ...EMPTY_FORM });
   const [variants, setVariants] = useState([EMPTY_VARIANT()]);
+  const [uploading, setUploading] = useState(false);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['admin-products'],
     queryFn: () => axios.get(`${API_BASE_URL}/products`).then(r => r.data),
   });
+
+  const uploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    setUploading(true);
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await axios.post(`${API_BASE_URL}/upload`, formData);
+      setForm(f => ({ ...f, images: f.images ? f.images + '\n' + res.data.url : res.data.url }));
+      toast.success('Image uploaded');
+    } catch {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const createMut = useMutation({
     mutationFn: (payload: any) => axios.post(`${API_BASE_URL}/products`, payload),
@@ -434,7 +452,15 @@ function ProductsTab() {
               />
             </div>
             <div className="col-span-2 space-y-1.5">
-              <Label className="text-xs uppercase tracking-widest text-muted-foreground">Image URLs (one per line)</Label>
+              <div className="flex justify-between items-end">
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Image URLs (one per line)</Label>
+                <div className="relative inline-flex">
+                  <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={uploadPhoto} disabled={uploading} />
+                  <Button variant="outline" size="sm" type="button" className="h-7 text-xs gap-1 border-sand pointer-events-none" disabled={uploading}>
+                    <Plus className="w-3 h-3"/> {uploading ? 'Uploading...' : 'Upload Image'}
+                  </Button>
+                </div>
+              </div>
               <textarea
                 value={form.images}
                 onChange={e => setForm(f => ({ ...f, images: e.target.value }))}

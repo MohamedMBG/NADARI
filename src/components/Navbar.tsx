@@ -61,7 +61,7 @@ export function Navbar() {
               <button className="w-10 h-10 rounded-full bg-[#f3f4f6] flex items-center justify-center text-foreground hover:bg-gray-200 transition">
                 <Search className="h-4 w-4" />
               </button>
-              <Link href="/admin" className="w-10 h-10 rounded-full bg-[#f3f4f6] hidden sm:flex items-center justify-center text-foreground hover:bg-gray-200 transition">
+              <Link href="/profile" className="w-10 h-10 rounded-full bg-[#f3f4f6] hidden sm:flex items-center justify-center text-foreground hover:bg-gray-200 transition">
                 <User className="h-4 w-4" />
               </Link>
               <button 
