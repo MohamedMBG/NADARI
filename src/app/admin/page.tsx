@@ -14,7 +14,7 @@ import {
 import { API_BASE_URL } from '@/lib/api';
 import {
   Package, ShoppingCart, Calendar, Clock, Settings, LogOut,
-  Plus, Trash2, Pencil, Save, Eye,
+  Plus, Trash2, Pencil, Save, BarChart3, Users, TrendingUp,
 } from 'lucide-react';
 
 /* ================================================================
@@ -35,6 +35,177 @@ const fmtDate = (d: string) => {
   try { return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
   catch { return d; }
 };
+
+const fmtMoney = (value: number) => `${Math.round(value).toLocaleString()} MAD`;
+
+type AdminAnalytics = {
+  overview: {
+    totalOrders: number;
+    deliveredOrders: number;
+    cancelledOrders: number;
+    revenue: number;
+    averageOrderValue: number;
+    pendingBookings: number;
+    activeReservations: number;
+    newCustomers30d: number;
+    repeatCustomers: number;
+  };
+  salesSeries: Array<{ date: string; revenue: number; orders: number }>;
+  orderStatusBreakdown: Array<{ status: string; count: number }>;
+  topProducts: Array<{ productId: string; name: string; category: string; quantitySold: number; revenue: number }>;
+  topCities: Array<{ city: string; orders: number }>;
+};
+
+/* ================================================================
+   0. ANALYTICS TAB
+   ================================================================ */
+function AnalyticsTab({ analytics }: { analytics?: AdminAnalytics }) {
+  if (!analytics) {
+    return <p className="text-muted-foreground animate-pulse">Loading analytics…</p>;
+  }
+
+  const maxRevenue = Math.max(...analytics.salesSeries.map((point) => point.revenue), 1);
+  const maxStatusCount = Math.max(...analytics.orderStatusBreakdown.map((item) => item.count), 1);
+
+  const analyticsCards = [
+    { label: 'Revenue', value: fmtMoney(analytics.overview.revenue), hint: 'Delivered orders' },
+    { label: 'Avg Order Value', value: fmtMoney(analytics.overview.averageOrderValue), hint: 'Active orders only' },
+    { label: 'New Customers', value: analytics.overview.newCustomers30d, hint: 'Last 30 days' },
+    { label: 'Repeat Customers', value: analytics.overview.repeatCustomers, hint: '2+ linked orders' },
+    { label: 'Delivered Orders', value: analytics.overview.deliveredOrders, hint: 'Completed revenue' },
+    { label: 'Cancelled Orders', value: analytics.overview.cancelledOrders, hint: 'Needs attention' },
+  ];
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h3 className="font-serif text-2xl font-bold">Analytics</h3>
+          <p className="text-sm text-muted-foreground">A quick read on sales momentum, operations, and customer behavior.</p>
+        </div>
+        <span className="text-xs uppercase tracking-widest text-muted-foreground">Last 7 days + lifetime summaries</span>
+      </div>
+
+      <div className="grid grid-cols-2 xl:grid-cols-6 gap-4">
+        {analyticsCards.map((card) => (
+          <div key={card.label} className="rounded border border-sand/30 bg-sand/5 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{card.label}</p>
+            <p className="mt-2 text-2xl font-serif text-charcoal">{card.value}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{card.hint}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="xl:col-span-2 rounded border border-sand/30 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h4 className="font-serif text-xl">Sales Trend</h4>
+              <p className="text-xs text-muted-foreground">Delivered revenue by day</p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground">Total</p>
+              <p className="font-semibold text-charcoal">{fmtMoney(analytics.overview.revenue)}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-7 gap-3 items-end h-64">
+            {analytics.salesSeries.map((point) => (
+              <div key={point.date} className="flex flex-col justify-end h-full">
+                <div className="flex-1 flex items-end">
+                  <div
+                    className="w-full rounded-t bg-charcoal/85 transition-all"
+                    style={{ height: `${Math.max((point.revenue / maxRevenue) * 100, point.revenue > 0 ? 12 : 4)}%` }}
+                    title={`${fmtDate(point.date)}: ${fmtMoney(point.revenue)} from ${point.orders} orders`}
+                  />
+                </div>
+                <p className="mt-3 text-[11px] font-bold uppercase tracking-widest text-center text-muted-foreground">
+                  {new Date(point.date).toLocaleDateString('en-GB', { weekday: 'short' })}
+                </p>
+                <p className="text-[11px] text-center text-charcoal">{point.orders}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded border border-sand/30 p-6">
+          <h4 className="font-serif text-xl mb-1">Order Status Mix</h4>
+          <p className="text-xs text-muted-foreground mb-6">Where the pipeline is concentrating</p>
+          <div className="space-y-4">
+            {analytics.orderStatusBreakdown.map((item) => (
+              <div key={item.status}>
+                <div className="flex items-center justify-between text-sm mb-2">
+                  <span className={`px-2 py-1 rounded text-[11px] font-bold ${statusColor(item.status)}`}>{item.status}</span>
+                  <span className="font-semibold text-charcoal">{item.count}</span>
+                </div>
+                <div className="h-2 rounded bg-sand/20 overflow-hidden">
+                  <div
+                    className="h-full bg-charcoal"
+                    style={{ width: `${(item.count / maxStatusCount) * 100}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div className="rounded border border-sand/30 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="font-serif text-xl">Top Products</h4>
+            <span className="text-xs text-muted-foreground">By delivered revenue</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="text-xs uppercase text-muted-foreground">
+                <tr>
+                  <th className="pb-3 text-left">Product</th>
+                  <th className="pb-3 text-left">Category</th>
+                  <th className="pb-3 text-right">Units</th>
+                  <th className="pb-3 text-right">Revenue</th>
+                </tr>
+              </thead>
+              <tbody>
+                {analytics.topProducts.map((product) => (
+                  <tr key={product.productId} className="border-t border-sand/20">
+                    <td className="py-3 font-semibold text-charcoal">{product.name}</td>
+                    <td className="py-3 text-muted-foreground">{product.category}</td>
+                    <td className="py-3 text-right">{product.quantitySold}</td>
+                    <td className="py-3 text-right font-semibold">{fmtMoney(product.revenue)}</td>
+                  </tr>
+                ))}
+                {analytics.topProducts.length === 0 && (
+                  <tr><td colSpan={4} className="py-8 text-center text-muted-foreground italic">No delivered product sales yet.</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="rounded border border-sand/30 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="font-serif text-xl">Top Cities</h4>
+            <span className="text-xs text-muted-foreground">By order volume</span>
+          </div>
+          <div className="space-y-4">
+            {analytics.topCities.map((city) => (
+              <div key={city.city} className="flex items-center justify-between border-b border-sand/20 pb-3">
+                <div>
+                  <p className="font-semibold text-charcoal">{city.city}</p>
+                  <p className="text-xs text-muted-foreground">Customer demand center</p>
+                </div>
+                <span className="text-lg font-serif">{city.orders}</span>
+              </div>
+            ))}
+            {analytics.topCities.length === 0 && (
+              <p className="py-8 text-center text-muted-foreground italic">No city data yet.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /* ================================================================
    1. ORDERS TAB
@@ -582,7 +753,7 @@ function SettingsTab() {
    MAIN DASHBOARD
    ================================================================ */
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('orders');
+  const [activeTab, setActiveTab] = useState('analytics');
   const [token, setToken] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -605,9 +776,9 @@ export default function AdminDashboard() {
     toast.success('Logged out');
   };
 
-  const { data: stats } = useQuery({
-    queryKey: ['admin-stats'],
-    queryFn: () => axios.get(`${API_BASE_URL}/admin/dashboard`).then(r => r.data),
+  const { data: analytics } = useQuery<AdminAnalytics>({
+    queryKey: ['admin-analytics'],
+    queryFn: () => axios.get(`${API_BASE_URL}/admin/analytics`).then(r => r.data),
     enabled: !!token,
   });
 
@@ -636,11 +807,19 @@ export default function AdminDashboard() {
 
   /* ---------- DASHBOARD ---------- */
   const tabs = [
+    { id: 'analytics', icon: BarChart3, label: 'Analytics' },
     { id: 'orders', icon: ShoppingCart, label: 'Orders' },
     { id: 'bookings', icon: Calendar, label: 'Bookings' },
     { id: 'holds', icon: Clock, label: 'Reservations' },
     { id: 'products', icon: Package, label: 'Products' },
     { id: 'settings', icon: Settings, label: 'Settings' },
+  ];
+
+  const stats = [
+    { label: 'Total Orders', value: analytics?.overview.totalOrders || 0, icon: ShoppingCart },
+    { label: 'Revenue', value: fmtMoney(analytics?.overview.revenue || 0), icon: TrendingUp },
+    { label: 'Pending Bookings', value: analytics?.overview.pendingBookings || 0, icon: Calendar },
+    { label: 'Customers', value: analytics?.overview.newCustomers30d || 0, icon: Users, hint: 'New in 30d' },
   ];
 
   return (
@@ -678,21 +857,27 @@ export default function AdminDashboard() {
       <main className="ml-64 flex-1 p-8">
         {/* Stats Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          {[
-            { label: 'Total Orders', value: stats?.totalOrders || 0 },
-            { label: 'Pending Bookings', value: stats?.pendingBookings || 0 },
-            { label: 'Active Holds', value: stats?.activeReservations || 0 },
-            { label: 'Revenue (MAD)', value: (stats?.revenue || 0).toLocaleString() },
-          ].map((s, i) => (
-            <div key={i} className="bg-white p-6 rounded border border-sand/30 shadow-sm border-l-4 border-l-charcoal">
-              <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{s.label}</span>
-              <p className="text-3xl font-serif mt-2 text-charcoal">{s.value}</p>
+          {stats.map((s) => {
+            const Icon = s.icon;
+            return (
+            <div key={s.label} className="bg-white p-6 rounded border border-sand/30 shadow-sm border-l-4 border-l-charcoal">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{s.label}</span>
+                  <p className="text-3xl font-serif mt-2 text-charcoal">{s.value}</p>
+                  {'hint' in s && s.hint ? <p className="text-xs text-muted-foreground mt-2">{s.hint}</p> : null}
+                </div>
+                <div className="w-10 h-10 rounded-full bg-sand/20 flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-charcoal" />
+                </div>
+              </div>
             </div>
-          ))}
+          )})}
         </div>
 
         {/* Tab Content */}
         <div className="bg-white rounded border border-sand/30 p-8 min-h-[500px] shadow-sm">
+          {activeTab === 'analytics' && <AnalyticsTab analytics={analytics} />}
           {activeTab === 'orders' && <OrdersTab />}
           {activeTab === 'bookings' && <BookingsTab />}
           {activeTab === 'holds' && <ReservationsTab />}
