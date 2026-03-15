@@ -79,17 +79,19 @@ export default function Shop() {
   if (sort === 'price_desc') filtered.sort((a: any, b: any) => b.price - a.price);
 
   return (
-    <div className="min-h-screen flex flex-col pt-20 bg-[#F9F8F6]">
+    <div className="min-h-screen flex flex-col pt-24">
       <Navbar />
       
       <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
         <motion.div 
           initial="hidden" animate="visible" variants={fadeUp}
-          className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 border-b border-charcoal/10 pb-8"
+          className="luxury-shell relative mb-16 flex flex-col gap-8 overflow-hidden rounded-[2rem] border border-white/50 px-8 py-10 md:flex-row md:items-end md:justify-between"
         >
+          <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.16),transparent_45%)]" />
           <div className="max-w-xl">
+            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.38em] text-muted-foreground">Curated Optical Archive</p>
             <h1 className="text-6xl font-serif mb-4 italic text-charcoal tracking-tight">The Collection</h1>
-            <p className="text-muted-foreground text-xl font-light">Curated eyewear for the modern minimalist.</p>
+            <p className="text-muted-foreground text-xl font-light text-balance">Curated eyewear for the modern minimalist, elevated with statement frames and precise finishing.</p>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
@@ -97,14 +99,14 @@ export default function Shop() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-charcoal/50 w-4 h-4" />
               <Input 
                 placeholder="Search styles..." 
-                className="pl-10 h-12 bg-white/50 border-charcoal/10 focus-visible:ring-charcoal/20 shadow-sm"
+                className="pl-10 h-12 bg-white/80 border-charcoal/10 rounded-full focus-visible:ring-charcoal/20 shadow-sm"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-full sm:w-48 h-12 bg-white/50 border-charcoal/10 uppercase text-xs tracking-[0.15em] font-semibold text-charcoal shadow-sm">
+              <SelectTrigger className="w-full sm:w-48 h-12 bg-white/80 rounded-full border-charcoal/10 uppercase text-xs tracking-[0.15em] font-semibold text-charcoal shadow-sm">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -116,7 +118,7 @@ export default function Shop() {
             </Select>
 
             <Select value={sort} onValueChange={setSort}>
-              <SelectTrigger className="w-full sm:w-48 h-12 bg-white/50 border-charcoal/10 uppercase text-xs tracking-[0.15em] font-semibold text-charcoal shadow-sm">
+              <SelectTrigger className="w-full sm:w-48 h-12 bg-white/80 rounded-full border-charcoal/10 uppercase text-xs tracking-[0.15em] font-semibold text-charcoal shadow-sm">
                 <SelectValue placeholder="Sort By" />
               </SelectTrigger>
               <SelectContent>
@@ -154,14 +156,15 @@ export default function Shop() {
               return (
                 <motion.div variants={fadeUp} key={product.id}>
                   <Link href={`/product/${product.slug}`} className="group flex flex-col h-full cursor-pointer">
-                    <div className="relative aspect-[4/5] bg-white border border-sand/20 overflow-hidden mb-8 p-12 transition-all duration-700 group-hover:shadow-2xl group-hover:border-sand/50">
-                      <span className="absolute top-4 left-4 bg-[#F6F1EB] text-charcoal border border-charcoal/10 text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 z-10">
+                    <div className="luxury-panel relative aspect-[4/5] overflow-hidden mb-8 rounded-[1.75rem] p-12 transition-all duration-700 group-hover:-translate-y-1 group-hover:shadow-2xl group-hover:border-sand/50">
+                      <div className="absolute inset-x-6 top-6 h-16 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.7),transparent_70%)] blur-xl" />
+                      <span className="absolute top-5 left-5 bg-[#F6F1EB]/85 text-charcoal border border-charcoal/10 text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 z-10 rounded-full">
                         COD Available
                       </span>
                       {outOfStock ? (
-                        <span className="absolute top-4 right-4 bg-red-100 text-red-700 text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold z-10">Out of Stock</span>
+                        <span className="absolute top-5 right-5 bg-red-100 text-red-700 text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold z-10 rounded-full">Out of Stock</span>
                       ) : isLowStock ? (
-                        <span className="absolute top-4 right-4 bg-orange-100 text-orange-700 text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold z-10">Only {totalStock} Left</span>
+                        <span className="absolute top-5 right-5 bg-orange-100 text-orange-700 text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold z-10 rounded-full">Only {totalStock} Left</span>
                       ) : null}
                       
                       <Image 
@@ -173,7 +176,7 @@ export default function Shop() {
                       
                       {/* Hover Overlay Button */}
                       <div className="absolute bottom-0 left-0 w-full p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
-                         <div className="bg-charcoal text-ivory text-center py-4 text-xs font-bold uppercase tracking-[0.2em] shadow-xl">
+                         <div className="rounded-full bg-charcoal text-ivory text-center py-4 text-xs font-bold uppercase tracking-[0.2em] shadow-xl">
                             Discover
                          </div>
                       </div>

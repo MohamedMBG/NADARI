@@ -21,11 +21,11 @@ const staggerContainer: Variants = {
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col pt-20 bg-white">
+    <main className="min-h-screen flex flex-col pt-24">
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative h-[85vh] flex items-center justify-center mx-4 mt-2 mb-8 rounded-2xl overflow-hidden shadow-2xl">
+      <section className="luxury-shell relative mx-4 mb-10 mt-2 flex h-[88vh] items-center justify-center overflow-hidden rounded-[2rem] shadow-2xl">
         <Image 
           src="https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80" 
           alt="NADARI Hero" 
@@ -33,8 +33,10 @@ export default function Home() {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/30 to-transparent" />
-        <div className="absolute inset-0 bg-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/35 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_28%)]" />
+        <div className="absolute left-8 top-8 h-24 w-24 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm" />
+        <div className="absolute bottom-10 right-10 h-32 w-32 rounded-full border border-[#d4af37]/30 bg-[#d4af37]/10 blur-sm" />
         
         <motion.div 
           className="relative z-10 text-center text-ivory max-w-4xl px-6 flex flex-col items-center"
@@ -112,9 +114,10 @@ export default function Home() {
       </section>
 
       {/* Standard Section */}
-      <section className="bg-charcoal text-ivory py-32 mt-12 relative overflow-hidden">
+      <section className="relative mt-12 overflow-hidden rounded-[2rem] bg-charcoal text-ivory py-32">
         {/* Subtle background element */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent opacity-50 pointer-events-none" />
+        <div className="absolute inset-0 luxury-grid opacity-10" />
         
         <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
@@ -165,8 +168,8 @@ export default function Home() {
       </section>
 
       {/* Boutique Map */}
-      <section className="flex flex-col md:flex-row h-auto md:h-[700px]">
-        <div className="w-full md:w-1/2 bg-[#F6F1EB] text-charcoal p-12 md:p-24 flex flex-col justify-center">
+      <section className="luxury-shell mx-4 mb-8 flex h-auto flex-col overflow-hidden rounded-[2rem] md:h-[700px] md:flex-row">
+        <div className="w-full md:w-1/2 bg-[#F6F1EB]/90 text-charcoal p-12 md:p-24 flex flex-col justify-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="max-w-md mx-auto w-full">
             <h2 className="font-serif text-5xl mb-12 italic">Visit the<br/>Boutique</h2>
             

@@ -88,7 +88,7 @@ function AnalyticsTab({ analytics }: { analytics?: AdminAnalytics }) {
 
       <div className="grid grid-cols-2 xl:grid-cols-6 gap-4">
         {analyticsCards.map((card) => (
-          <div key={card.label} className="rounded border border-sand/30 bg-sand/5 p-4">
+          <div key={card.label} className="luxury-panel rounded-[1.5rem] p-4">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{card.label}</p>
             <p className="mt-2 text-2xl font-serif text-charcoal">{card.value}</p>
             <p className="mt-1 text-xs text-muted-foreground">{card.hint}</p>
@@ -97,7 +97,7 @@ function AnalyticsTab({ analytics }: { analytics?: AdminAnalytics }) {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 rounded border border-sand/30 p-6">
+        <div className="luxury-panel xl:col-span-2 rounded-[1.75rem] p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h4 className="font-serif text-xl">Sales Trend</h4>
@@ -127,7 +127,7 @@ function AnalyticsTab({ analytics }: { analytics?: AdminAnalytics }) {
           </div>
         </div>
 
-        <div className="rounded border border-sand/30 p-6">
+        <div className="luxury-panel rounded-[1.75rem] p-6">
           <h4 className="font-serif text-xl mb-1">Order Status Mix</h4>
           <p className="text-xs text-muted-foreground mb-6">Where the pipeline is concentrating</p>
           <div className="space-y-4">
@@ -150,7 +150,7 @@ function AnalyticsTab({ analytics }: { analytics?: AdminAnalytics }) {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <div className="rounded border border-sand/30 p-6">
+        <div className="luxury-panel rounded-[1.75rem] p-6">
           <div className="flex items-center justify-between mb-4">
             <h4 className="font-serif text-xl">Top Products</h4>
             <span className="text-xs text-muted-foreground">By delivered revenue</span>
@@ -182,7 +182,7 @@ function AnalyticsTab({ analytics }: { analytics?: AdminAnalytics }) {
           </div>
         </div>
 
-        <div className="rounded border border-sand/30 p-6">
+        <div className="luxury-panel rounded-[1.75rem] p-6">
           <div className="flex items-center justify-between mb-4">
             <h4 className="font-serif text-xl">Top Cities</h4>
             <span className="text-xs text-muted-foreground">By order volume</span>
@@ -785,20 +785,24 @@ export default function AdminDashboard() {
   /* ---------- LOGIN SCREEN ---------- */
   if (!token) {
     return (
-      <div className="min-h-screen bg-[#F6F1EB] flex flex-col items-center justify-center p-4">
-        <div className="bg-white p-12 rounded-lg shadow-2xl w-full max-w-md border border-sand/30">
-          <h1 className="font-serif text-3xl font-bold text-center mb-2">NADARI</h1>
-          <p className="text-center text-muted-foreground text-sm mb-8">Admin Dashboard</p>
+      <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[linear-gradient(160deg,#120e0d_0%,#221916_45%,#33251f_100%)] p-4">
+        <div className="absolute inset-0 luxury-grid opacity-10" />
+        <div className="absolute left-[-10rem] top-[-8rem] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,rgba(212,175,55,0.22),transparent_65%)] blur-3xl" />
+        <div className="absolute bottom-[-8rem] right-[-8rem] h-[22rem] w-[22rem] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.1),transparent_70%)] blur-3xl" />
+        <div className="luxury-shell relative w-full max-w-md rounded-[2rem] border border-white/20 bg-white/10 p-12 text-white shadow-2xl">
+          <p className="mb-2 text-center text-[11px] uppercase tracking-[0.42em] text-[#d9c8b4]">Private Operations</p>
+          <h1 className="mb-2 text-center font-serif text-4xl font-bold text-white">NADARI</h1>
+          <p className="mb-8 text-center text-sm text-white/70">Admin Dashboard</p>
           <form onSubmit={handleLogin} className="space-y-5">
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-widest text-muted-foreground">Email</Label>
-              <Input type="email" placeholder="admin@nadari.ma" value={email} onChange={e => setEmail(e.target.value)} className="h-12 border-sand" />
+              <Label className="text-xs uppercase tracking-widest text-white/60">Email</Label>
+              <Input type="email" placeholder="admin@nadari.ma" value={email} onChange={e => setEmail(e.target.value)} className="h-12 rounded-full border-white/15 bg-white/10 text-white placeholder:text-white/40" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-widest text-muted-foreground">Password</Label>
-              <Input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} className="h-12 border-sand" />
+              <Label className="text-xs uppercase tracking-widest text-white/60">Password</Label>
+              <Input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} className="h-12 rounded-full border-white/15 bg-white/10 text-white placeholder:text-white/40" />
             </div>
-            <Button type="submit" className="w-full h-12 bg-charcoal text-ivory uppercase tracking-widest text-sm font-bold">Login</Button>
+            <Button type="submit" className="h-12 w-full rounded-full bg-[#f6f1eb] text-sm font-bold uppercase tracking-[0.24em] text-charcoal hover:bg-white">Login</Button>
           </form>
         </div>
       </div>
@@ -823,22 +827,23 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen flex bg-[linear-gradient(180deg,#f8f4ef_0%,#efe3d5_100%)]">
       {/* Sidebar */}
-      <aside className="w-64 bg-charcoal text-ivory flex flex-col fixed h-full z-10 shrink-0">
+      <aside className="fixed z-10 flex h-full w-72 shrink-0 flex-col border-r border-white/10 bg-[linear-gradient(180deg,#181210_0%,#261b18_100%)] text-ivory shadow-2xl">
         <div className="p-8 border-b border-ivory/10">
-          <h2 className="font-serif text-2xl font-bold tracking-widest">NADARI</h2>
-          <p className="text-xs text-sand/70 mt-1 uppercase tracking-widest">Admin Panel</p>
+          <p className="text-[11px] uppercase tracking-[0.34em] text-sand/70">Private Operations</p>
+          <h2 className="font-serif text-3xl font-bold tracking-[0.18em] text-white">NADARI</h2>
+          <p className="mt-2 text-xs uppercase tracking-widest text-sand/70">Admin Panel</p>
         </div>
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-4 space-y-2">
           {tabs.map(tab => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded text-sm transition-colors ${
-                  activeTab === tab.id ? 'bg-ivory text-charcoal font-semibold' : 'text-ivory/70 hover:bg-ivory/10 hover:text-ivory'
+                className={`w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-sm uppercase tracking-[0.18em] transition-all ${
+                  activeTab === tab.id ? 'bg-ivory text-charcoal font-semibold shadow-xl' : 'text-ivory/70 hover:bg-ivory/10 hover:text-ivory'
                 }`}
               >
                 <Icon className="w-4 h-4" /> {tab.label}
@@ -854,13 +859,13 @@ export default function AdminDashboard() {
       </aside>
 
       {/* Main Content */}
-      <main className="ml-64 flex-1 p-8">
+      <main className="ml-72 flex-1 p-8">
         {/* Stats Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {stats.map((s) => {
             const Icon = s.icon;
             return (
-            <div key={s.label} className="bg-white p-6 rounded border border-sand/30 shadow-sm border-l-4 border-l-charcoal">
+            <div key={s.label} className="luxury-shell rounded-[1.75rem] border border-white/50 p-6">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{s.label}</span>
@@ -876,7 +881,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Tab Content */}
-        <div className="bg-white rounded border border-sand/30 p-8 min-h-[500px] shadow-sm">
+        <div className="luxury-shell min-h-[500px] rounded-[2rem] border border-white/60 p-8 shadow-sm">
           {activeTab === 'analytics' && <AnalyticsTab analytics={analytics} />}
           {activeTab === 'orders' && <OrdersTab />}
           {activeTab === 'bookings' && <BookingsTab />}
